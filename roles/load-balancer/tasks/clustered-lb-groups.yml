@@ -1,0 +1,74 @@
+--- 
+- name: Create HTTP load balancer groups 
+  block:
+    - name: Create an HTTP target group with automation controller instance targets
+      vars:
+        controller_group: "{{ groups['demo_controller'] }}"
+      community.aws.elb_target_group:
+        name: automation-controllers-http
+        protocol: HTTP
+        port: "{{ lb_port }}"
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        successful_response_codes: "200,250-260"
+        targets:
+          - Id: "{{ hostvars[controller_group[0]].instance_id }}"
+            Port: "{{ lb_port }}"
+          - Id: "{{ hostvars[controller_group[1]].instance_id }}"
+            Port: "{{ lb_port }}"
+          - Id: "{{ hostvars[controller_group[2]].instance_id }}"
+            Port: "{{ lb_port }}"
+        state: present
+        wait: False
+
+    - name: Create an HTTP target group with automation hub instance targets
+      vars:
+        hub_group: "{{ groups['demo_hub'] }}"
+      community.aws.elb_target_group:
+        name: automation-hubs-http
+        protocol: HTTP
+        port: "{{ lb_port }}"
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        successful_response_codes: "200,250-260"
+        targets:
+          - Id: "{{ hostvars[hub_group[0]].instance_id }}"
+            Port: "{{ lb_port }}"
+        state: present
+        wait: False
+  when: lb_port == 80 
+
+- name: Create HTTPS load balancer groups 
+  block:
+    - name: Create an HTTPS target group with automation controller instance targets
+      vars:
+        controller_group: "{{ groups['demo_controller'] }}"
+      community.aws.elb_target_group:
+        name: automation-controllers-https
+        protocol: HTTPS
+        port: "{{ lb_port }}"
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        successful_response_codes: "200,250-260"
+        targets:
+          - Id: "{{ hostvars[controller_group[0]].instance_id }}"
+            Port: "{{ lb_port }}"
+          - Id: "{{ hostvars[controller_group[1]].instance_id }}"
+            Port: "{{ lb_port }}"
+          - Id: "{{ hostvars[controller_group[2]].instance_id }}"
+            Port: "{{ lb_port }}"
+        state: present
+        wait: False
+
+    - name: Create an HTTPS target group with automation hub instance targets
+      vars:
+        hub_group: "{{ groups['demo_hub'] }}"
+      community.aws.elb_target_group:
+        name: automation-hubs-https
+        protocol: HTTPS
+        port: "{{ lb_port }}"
+        vpc_id: "{{ vpc_info.vpcs[0].id }}"
+        successful_response_codes: "200,250-260"
+        targets:
+          - Id: "{{ hostvars[hub_group[0]].instance_id }}"
+            Port: "{{ lb_port }}"
+        state: present
+        wait: False
+  when: lb_port == 443

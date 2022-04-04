@@ -1,0 +1,75 @@
+---
+- name: Create HTTP load balancers 
+  block:
+    - name: Create automation controller HTTP load balancer 
+      community.aws.elb_application_lb:
+        state: present
+        name: automation-controller-lb-HTTP
+        security_groups: "{{ sec_info.security_groups[0].group_name }}"
+        subnets:
+          - "{{ vpc_test_subnet_info.subnets[0].subnet_id }}"
+          - "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}"
+        listeners:
+          - Protocol: HTTP
+            Port: "{{ lb_port }}"
+            DefaultActions:
+              - Type: forward 
+                TargetGroupName: automation-controllers-http
+                
+    - name: Create automation hub HTTP load balancer 
+      community.aws.elb_application_lb:
+        state: present
+        name: automation-hub-lb-HTTP
+        security_groups: "{{ sec_info.security_groups[0].group_name }}"
+        subnets:
+          - "{{ vpc_test_subnet_info.subnets[0].subnet_id }}"
+          - "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}"
+        listeners:
+          - Protocol: HTTP
+            Port: "{{ lb_port }}"
+            DefaultActions:
+              - Type: forward 
+                TargetGroupName: automation-hubs-http
+  when: lb_port == 80 
+
+- debug:
+    msg: "{{ controller_cert_arn.certificate.arn | default(omit) }}"
+
+- name: Create load balancers for HTTPS
+  block:
+    - name: Create automation controller HTTPS load balancer 
+      community.aws.elb_application_lb:
+        state: present
+        name: automation-controller-lb-HTTPS
+        security_groups: "{{ sec_info.security_groups[0].group_name }}"
+        subnets:
+          - "{{ vpc_test_subnet_info.subnets[0].subnet_id }}"
+          - "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}"
+        listeners:
+          - Protocol: HTTPS
+            Port: "{{ lb_port }}"
+            DefaultActions:
+              - Type: forward 
+                TargetGroupName: automation-controllers-https
+            SslPolicy: ELBSecurityPolicy-2015-05
+            Certificates:
+              - CertificateArn: "{{ controller_cert_arn.certificate.arn | default(omit) }}"
+                
+    - name: Create automation hub HTTPS load balancer 
+      community.aws.elb_application_lb:
+        state: present
+        name: automation-hub-lb-HTTPS
+        security_groups: "{{ sec_info.security_groups[0].group_name }}"
+        subnets:
+          - "{{ vpc_test_subnet_info.subnets[0].subnet_id }}"
+          - "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}"
+        listeners:
+          - Protocol: HTTPS
+            Port: "{{ lb_port }}"
+            DefaultActions:
+              - Type: forward 
+                TargetGroupName: automation-hubs-https
+            SslPolicy: ELBSecurityPolicy-2015-05
+            Certificates:
+              - CertificateArn: "{{ hub_cert_arn.certificate.arn | default(omit) }}"
+  when: lb_port == 443

@@ -1,0 +1,9 @@
+---
+- name: Setup ansible.cfg for Automation Hub and Galaxy
+  hosts: localhost
+  tasks:
+    - name: Template ansible.cfg 
+      template:
+        src: ansible.cfg.j2 
+        dest: "{{ playbook_dir }}/ansible.cfg"
+        

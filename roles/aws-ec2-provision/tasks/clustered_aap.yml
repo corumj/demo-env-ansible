@@ -1,0 +1,55 @@
+---
+- name: Find AMI for Linux Host
+  amazon.aws.ec2_ami_info:
+    region: "{{ aws_region }}"
+    owners: 309956199498
+    filters:
+      name: 'RHEL-8*HVM-*Hourly*'
+      architecture: x86_64
+  register: amis
+
+- name: save ami for rhel node
+  set_fact:
+    node_ami_rhel: >
+      {{ amis.images | selectattr('name', 'defined') | sort(attribute='name') | last }}
+
+- name: Provision EC2 Linux Instance 
+  amazon.aws.ec2_instance:
+    profile: "{{ aws_profile | default(omit) }}"
+    state: started
+    name: "{{ item.server_env }}-{{ item.short_desc }}-{{ item.server_os }}"
+    security_group: "{{ sec_info.security_groups[0].group_name }}"
+    vpc_subnet_id: "{{ item.subnet }}"
+    image_id: "{{ node_ami_rhel.image_id }}"
+    instance_type: "{{ aws_instance_type }}"
+    key_name: "ansible-demo-key"
+    tags: 
+      group_name: "{{ item.group_name }}"
+      short_desc: "{{ item.short_desc }}"
+      server_env: "{{ item.server_env }}" 
+      server_os: "{{ item.server_os }}"
+      business_domain_name: "{{ item.business_domain_name }}"
+      demo: Ansible 
+    wait: yes
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+  async: 600
+  poll: 0
+  register: ec2_loop
+  loop:
+    - { group_name: controller, short_desc: controller1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
+    - { group_name: controller, short_desc: controller2, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
+    - { group_name: controller, short_desc: controller3, server_env: dev, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}" }
+    - { group_name: hub, short_desc: hub1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
+    - { group_name: db, short_desc: db1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
+      
+- name: Wait for provisioning tasks to complete
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+    mode: status
+  retries: 20
+  delay: 20 
+  loop: "{{ ec2_loop.results }}"
+  register: ec2_loop_jobs
+  until: ec2_loop_jobs.finished

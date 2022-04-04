@@ -1,0 +1,128 @@
+---
+- name: Setup AWS for Demo Environment 
+  hosts: localhost
+  connection: local 
+  collections:
+    - amazon.aws
+    - community.crypto
+  tasks: 
+  # setup infra 
+    - name: setup AWS infra
+      include_role:
+        name: aws-infra-setup  
+
+  # retrieve infra id's 
+    - name: get infra info 
+      include_role:
+        name: aws-infra-info  
+
+    # provision AAP instances
+    - name: Provision clustered AAP Instances 
+      include_role: 
+        name: aws-ec2-provision 
+        tasks_from: clustered_aap.yml
+      vars:
+        aws_instance_type: m4.xlarge 
+
+    - name: Prepare certificate challenges for Hub and Controller
+      include_role:
+        name: certificates
+        tasks_from: prepare-challenge.yml 
+
+    - name: Refresh inventory 
+      meta: refresh_inventory 
+
+    # - name: Create load balancer groups 
+    #   include_role:
+    #     name: load-balancer
+    #     tasks_from: "{{ install_strategy }}-lb-groups.yml"
+    #   vars:
+    #     lb_port: 80
+
+    # - name: Create load balancers
+    #   include_role:
+    #     name: load-balancer
+    #     tasks_from: network-lb.yml
+    #   vars:
+    #     lb_port: 80
+
+
+    - name: Prepare route53 DNS for challenge
+      include_role:
+        name: certificates
+        tasks_from: set-dns-challenge.yml
+
+    - name: Validate DNS challenges 
+      include_role: 
+        name: certificates
+        tasks_from: validate-challenge.yml
+
+    # - name: Upload automation hub signed certificate
+    #   community.aws.aws_acm:
+    #     profile: default
+    #     certificate: "{{ lookup('file', 'hub') }}"
+    #     certificate_chain: "{{ lookup('file', 'hub_chain') }}"
+    #     private_key : "{{ lookup('file', private_key_path) }}"
+    #     name_tag: automation-hub-cert
+    #     state: present
+    #   register: hub_cert_arn
+
+    # - name: Upload automation controller signed certificate
+    #   community.aws.aws_acm:
+    #     profile: default
+    #     certificate: "{{ lookup('file', 'controller') }}"
+    #     certificate_chain: "{{ lookup('file', 'controller_chain') }}"
+    #     private_key : "{{ lookup('file', private_key_path) }}"
+    #     name_tag: automation-controller-cert
+    #     state: present
+    #   register: controller_cert_arn
+
+    # - name: Update load balancer groups with TLS port
+    #   include_role:
+    #     name: load-balancer
+    #     tasks_from: "{{ install_strategy }}-lb-groups.yml"
+    #   vars:
+    #     lb_port: 443
+    #     controller_cert_arn: "{{ controller_cert_arn }}"
+
+    # - name: Update load balancers with TLS port
+    #   include_role:
+    #     name: load-balancer
+    #     tasks_from: network-lb.yml
+    #   vars:
+    #     lb_port: 443
+
+    # - debug:
+    #     msg: 
+    #       - "{{ network_info }}"
+    #       - "{{ network_info | json_query(net_query) }}"
+    #   vars: 
+    #     net_query: "network_interfaces[?contains(description, 'automation-hub-lb-HTTPS')].association.public_ip"
+
+    - name: Setup Route 53 for hub domain name 
+      community.aws.route53:
+        profile: "{{ aws_profile }}"
+        state: present 
+        zone: "{{ top_level_domain }}"
+        record: "hub.{{ top_level_domain }}"
+        type: A
+        value: "{{ network_info | json_query(net_query) }}"
+        ttl: 300
+        wait: yes
+        overwrite: yes
+      vars:
+        net_query: "network_interfaces[?contains(description, 'automation-hub-lb-HTTPS')].association.public_ip"
+
+    - name: Setup Route 53 for controller domain name 
+      community.aws.route53:
+        profile: "{{ aws_profile }}"
+        state: present 
+        zone: "{{ top_level_domain }}"
+        record: "ansible.{{ top_level_domain }}"
+        type: A
+        value: "{{ network_info | json_query(net_query)}}"
+        ttl: 300
+        wait: yes
+        overwrite: yes
+      vars:
+        net_query: "network_interfaces[?contains(description, 'automation-controller-lb-HTTPS')].association.public_ip"

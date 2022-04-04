@@ -1,0 +1,18 @@
+# AWS Defaults 
+aws_profile: default 
+aws_region: us-east-2 
+aws_instance_type: t2.medium 
+ansible_user: ec2-user 
+test_az: us-east-2c
+dev_az: us-east-2b
+
+# SSH Key defaults
+public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  
+acme_account_key_path: ~/.ssh/acme_key 
+private_key_path: ~/.ssh/cert_key
+
+controller_dns: ansible.{{ top_level_domain }}
+hub_dns: hub.{{ top_level_domain }}
+
+controller_csr_path: ~/.ssh/{{ controller_dns }}
+hub_csr_path: ~/.ssh/{{ hub_dns }}

@@ -1,0 +1,33 @@
+- name: Validate Automation Hub DNS Challenge 
+  acme_certificate:
+    account_key_src: "{{ acme_account_key_path }}"
+    account_email: "{{ redhat_email }}"
+    csr: "{{ hub_csr_path }}"
+    dest: "{{ playbook_dir }}/hub"
+    fullchain_dest: "{{ playbook_dir }}/hub_chain"
+    challenge: dns-01 
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_version: 2 
+    terms_agreed: yes 
+    remaining_days: 10 
+    data: "{{ hub_dns_challenge }}"
+    force: "{{ force }}"
+  register: hub_cert_valid
+  when: hub_dns_challenge is changed 
+
+- name: Validate Automation Controller DNS Challenge 
+  acme_certificate:
+    account_key_src: "{{ acme_account_key_path }}"
+    account_email: "{{ redhat_email }}"
+    csr: "{{ controller_csr_path }}"
+    dest: "{{ playbook_dir }}/controller"
+    fullchain_dest: "{{ playbook_dir }}/controller_chain"
+    challenge: dns-01 
+    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_version: 2 
+    terms_agreed: yes 
+    remaining_days: 10 
+    data: "{{ controller_dns_challenge }}"
+    force: "{{ force }}"
+  register: controller_cert_valid
+  when: controller_dns_challenge is changed 

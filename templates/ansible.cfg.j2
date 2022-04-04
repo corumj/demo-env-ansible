@@ -1,0 +1,13 @@
+[defaults]
+host_key_checking = False
+
+[galaxy]
+server_list = automation_hub, galaxy 
+
+[galaxy_server.automation_hub]
+url={{ automation_hub_url }}
+auth_url={{ automation_hub_auth_url }}
+token={{ offline_token }}
+
+[galaxy_server.galaxy]
+url=https://galaxy.ansible.com

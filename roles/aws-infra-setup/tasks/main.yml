@@ -1,0 +1,127 @@
+---
+- name: create a VPC 
+  amazon.aws.ec2_vpc_net:
+    profile: "{{ aws_profile }}"
+    state: present
+    name: "ansible-vpc"
+    cidr_block: 10.0.0.0/16
+    tenancy: default
+    tags:
+      demo: Ansible 
+  register: vpc_info
+
+- name: Create Internet Gateway for VPC  
+  amazon.aws.ec2_vpc_igw:
+    profile: "{{ aws_profile }}"
+    state: present
+    vpc_id: "{{ vpc_info.vpc.id }}"
+    tags:
+      Name: "ansible-vpc-igw"
+      demo: Ansible 
+  register: gateway
+
+- name: Create security group 
+  amazon.aws.ec2_group: 
+    profile: "{{ aws_profile }}"
+    state: present
+    name: "ansible-sec-group"
+    description: Inbound WinRM and RDP, http for demo servers and internal AD ports 
+    rules:
+      - proto: tcp 
+        ports:
+          - 80 # HTTP
+          - 443 # HTTPS
+          - 22 # SSH
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        to_port: -1
+        from_port: -1
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        ports: 
+          - 80
+          - 5986 # WinRM
+          - 3389 # RDP
+          - 53 # DNS
+          - 88 # Kerberos Authentication
+          - 135 # RPC
+          - 139 # Netlogon 
+          - 389 # LDAP 
+          - 445 # SMB
+          - 464 # Kerberos Authentication
+          - 5432 # PostgreSQL
+          - 636 # LDAPS (LDAP over TLS)
+          - 873 # Rsync 
+          - 3268-3269 # Global Catalog 
+          - 1024-65535 # Ephemeral RPC ports
+        cidr_ip: 10.0.0.0/16
+      - proto: udp 
+        ports: 
+          - 53 # DNS
+          - 88 # Kerberos Authentication
+          - 123 # NTP
+          - 137-138 # Netlogon 
+          - 389 # LDAP 
+          - 445 # SMB
+          - 464 # Kerberos Authentication
+          - 1024-65535 # Ephemeral RPC ports
+        cidr_ip: 10.0.0.0/16
+    rules_egress:
+      - proto: -1 
+        cidr_ip: 0.0.0.0/0
+    vpc_id: "{{ vpc_info.vpc.id }}"
+    tags:
+      Name: "ansible-sec-group"
+      demo: Ansible 
+  register: sec_info
+
+- name: Create a test subnet on the VPC for our apps
+  amazon.aws.ec2_vpc_subnet:
+    profile: "{{ aws_profile }}"
+    state: present
+    vpc_id: "{{ vpc_info.vpc.id }}"
+    cidr: 10.0.3.0/24
+    map_public: yes
+    tags:
+      Name: "ansible-subnet-test"
+      env: test
+      demo: Ansible 
+    az: "{{ test_az }}"
+  register: vpc_test_subnet_info
+
+- name: Create a dev subnet on the VPC for our apps
+  amazon.aws.ec2_vpc_subnet:
+    profile: "{{ aws_profile }}"
+    state: present
+    vpc_id: "{{ vpc_info.vpc.id }}"
+    cidr: 10.0.2.0/24
+    map_public: yes
+    tags:
+      Name: "ansible-subnet-dev"
+      env: dev
+      demo: Ansible 
+    az: "{{ dev_az }}"
+  register: vpc_dev_subnet_info
+
+- name: Create a subnet route table 
+  community.aws.ec2_vpc_route_table:
+    profile: "{{ aws_profile }}"
+    state: present 
+    vpc_id: "{{ vpc_info.vpc.id }}"
+    subnets:
+      - "{{ vpc_test_subnet_info.subnet.id }}"
+      - "{{ vpc_dev_subnet_info.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0 
+        gateway_id: "{{ gateway.gateway_id }}"
+    tags: 
+      Name: "ansible-vpc-rtbl"
+      demo: Ansible 
+  register: vpc_route_info
+    
+- name: Generate AWS Keypair 
+  amazon.aws.ec2_key: 
+    profile: "{{ aws_profile }}"
+    name: "ansible-demo-key"
+    key_material: "{{ public_key }}"
+    state: present

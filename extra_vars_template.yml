@@ -1,0 +1,29 @@
+# Create an offline token for access.redhat.com here: https://access.redhat.com/management/api
+api_offline_token: 
+aap_bundle_sha_value: ac44071ab32248022ee51eed7db2002a772178bfe03807cd08f67dbde58f1941 # currently for AAP 2.1.1 Bundled Installer 
+
+# Create a token for Automation Hub at https://console.redhat.com/ansible/automation-hub/token
+offline_token: tokenstuffblahblah
+automation_hub_url:
+automation_hub_auth_url:
+
+# Required for podman authentication to registry.redhat.io
+redhat_username: myuser
+redhat_password: mypassword123
+redhat_email: my@email.com
+
+# initial admin password for Ansible control node
+admin_password: mypassword123
+
+# Sets the Route53 DNS zone to use for Amazon Web Services
+top_level_domain: sandbox.opentlc.com # this comes from the RHPDS email
+
+# Download link for AAP 2.x
+aap_bundle: https://access.cdn.redhat.com/content/origin/files/sha256/ac/ac44071ab32248022ee51eed7db2002a772178bfe03807cd08f67dbde58f1941/ansible-automation-platform-setup-bundle-2.1.1-2.tar.gz
+
+# Option for a fully clustered and load balanced install or a quicker stand alone instance
+install_strategy: clustered # or single
+
+# Force issue of certificates for testing, set to false by default but if you 
+# get errors from spinning it back up and down quickyly, set to true.
+force: False

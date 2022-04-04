@@ -1,0 +1,61 @@
+---
+# - name: Provision EFS storage service 
+#   hosts: localhost
+#   connection: local
+#   collections:
+#     - community.aws
+
+#   tasks:
+
+#     - name: get infra info 
+#       include_role:
+#         name: aws-infra-info  
+#       run_once: True 
+
+#     - name: create EFS service
+#       efs:
+#         state: present
+#         name: ansible-efs-pulp 
+#         tags:
+#           Name: ansible-efs-pulp-test
+#           demo: Ansible 
+#         targets:
+#           - subnet_id: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}"
+#             security_groups: ['{{ sec_info.security_groups[0].group_id }}']
+#           - subnet_id: "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}"
+#             security_groups: ['{{ sec_info.security_groups[0].group_id }}']
+#       delegate_to: localhost
+#       run_once: True 
+#       register: efs_info 
+
+#     - name: save efs_info 
+#       set_fact:
+#         efs_address: "{{ efs_info.efs.filesystem_address }}"
+
+# - name: attach EFS storage to automation hub servers 
+#   hosts: demo_hub
+#   become: yes 
+#   tasks:
+    # - name: Ensure mount directory exists
+    #   file:
+    #     path: /var/lib/pulp 
+    #     state: directory
+
+    # - name: Mount EFS volume
+    #   ansible.posix.mount:
+    #     path: /var/lib/pulp 
+    #     src: "{{ hostvars['localhost']['efs_address'] }}"
+    #     state: present
+    #     fstype: nfs4
+        
+- name: Install controller and hub 
+  hosts: localhost
+  connection: local sys
+  vars:
+    ansible_user: ec2-user
+  tasks:
+
+    - name: Controller Setup 
+      include_role: 
+        name: controller
+        tasks_from: setup.yml
