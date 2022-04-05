@@ -13,3 +13,5 @@ test.yml
 /controller
 /controller_chain
 /hub_chain
+generated_files/*
+!generated_files/README.md

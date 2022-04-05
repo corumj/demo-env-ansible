@@ -1,15 +1,62 @@
 ---       
-# - name: Install controller and hub 
-#   hosts: localhost
-#   connection: local sys
-#   vars:
-#     ansible_user: ec2-user
-#   tasks:
+- name: Install controller and hub 
+  hosts: localhost
+  connection: local sys
+  vars:
+    ansible_user: ec2-user
+  tasks:
 
-#     - name: Controller Setup 
-#       include_role: 
-#         name: controller
-#         tasks_from: setup.yml
+    - name: Controller Setup 
+      include_role: 
+        name: controller
+        tasks_from: setup.yml
+
+    - name: wait for Automation Controller to be up
+      uri:
+        url: https://localhost/api/v2/ping/
+        method: GET
+        user: admin
+        password: "{{admin_password}}"
+        validate_certs: false
+      register: check2
+      until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
+      retries: 60
+      delay: 10
+
+    - name: Display /api/v2/ping results
+      debug:
+        msg: '{{ check2.json }}'
+
+    - name: load license block
+      block:
+        - name: check for base64 variable first
+          copy:
+            dest: '{{ playbook_dir }}/manifest.zip'
+            content: '{{ base64_manifest | b64decode }}'
+          delegate_to: localhost
+          become: false
+      rescue:
+        - name: unable to load base64_manifest
+          debug:
+            msg: 'No base64_manifest variable found, trying to open manifest.zip'
+      always:
+        - name: Load manifest into variable
+          local_action:
+            module: slurp
+            src: "{{ playbook_dir }}/manifest.zip"
+          register: manifest_file
+          become: false
+
+    - name: Post manifest file
+      uri:
+        url: https://ansible.{{ top_level_domain }}/api/v2/config/
+        method: POST
+        user: admin
+        password: "{{ admin_password }}"
+        body: '{ "eula_accepted": true, "manifest": "{{ manifest_file.content }}" }'
+        body_format: json
+        validate_certs: false
+        force_basic_auth: true
 
 - name: Copy signed certificate to Controller hosts 
   hosts: demo_controller
@@ -62,3 +109,11 @@
         name: nginx 
         state: restarted
       when: copy_cert is changed or copy_key is changed
+
+- name: Display AAP access URLs
+  hosts: localhost
+  tasks:
+    - debug:
+        msg: 
+          - "Access Automation Controller: https://ansible.{{ top_level_domain }}"
+          - "Access Private Automation Hub: https://hub.{{ top_level_domain }}"

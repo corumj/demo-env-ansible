@@ -1,29 +1,48 @@
-# Create an offline token for access.redhat.com here: https://access.redhat.com/management/api
-api_offline_token: 
-aap_bundle_sha_value: ac44071ab32248022ee51eed7db2002a772178bfe03807cd08f67dbde58f1941 # currently for AAP 2.1.1 Bundled Installer 
-
-# Create a token for Automation Hub at https://console.redhat.com/ansible/automation-hub/token
-offline_token: tokenstuffblahblah
-automation_hub_url:
-automation_hub_auth_url:
-
-# Required for podman authentication to registry.redhat.io
-redhat_username: myuser
-redhat_password: mypassword123
-redhat_email: my@email.com
-
-# initial admin password for Ansible control node
-admin_password: mypassword123
+####  This section will change whenever you get a new RH OpenEnvironment 
 
 # Sets the Route53 DNS zone to use for Amazon Web Services
-top_level_domain: sandbox.opentlc.com # this comes from the RHPDS email
+top_level_domain: sandbox1234.opentlc.com # this comes from the RHPDS email
 
-# Download link for AAP 2.x
-aap_bundle: https://access.cdn.redhat.com/content/origin/files/sha256/ac/ac44071ab32248022ee51eed7db2002a772178bfe03807cd08f67dbde58f1941/ansible-automation-platform-setup-bundle-2.1.1-2.tar.gz
+#### End section
 
-# Option for a fully clustered and load balanced install or a quicker stand alone instance
-install_strategy: clustered # or single
+#### This section is important for initial setup, and if you haven't used this repo in more than 30 days, you will need to update the offline tokens.
+
+# Create an API offline token for access.redhat.com here: https://access.redhat.com/management/api
+api_offline_token: tokengoeshere
+
+# Create a token for Automation Hub at https://console.redhat.com/ansible/automation-hub/token < not the same as the above token
+hub_offline_token: tokengoeshere
+
+# Required for podman authentication to registry.redhat.io
+redhat_username: user1
+redhat_password: pas1
+redhat_email: user1@company1.com
+
+# initial admin password for Ansible control node
+admin_password: mypassword
+
+# Option for a clustered install or a quicker stand alone install
+install_strategy: clustered # clustered or single
+
+# let's encrypt directory server 
+
+## Staging or Prod, only switch to Prod when you've confirmed your setup works
+acme_directory_server: https://acme-staging-v02.api.letsencrypt.org/directory  # Staging
+#acme_directory_server: https://acme-v02.api.letsencrypt.org/directory  # Prod
+
+#### End Section 
+
+
+#### This section shouldn't change frequently or really at all until the next platform version comes out.
+
+# Platform 2.1.1 sha value
+aap_bundle_sha_value: ac44071ab32248022ee51eed7db2002a772178bfe03807cd08f67dbde58f1941  
+
+# Automation hub URLs
+automation_hub_url: https://console.redhat.com/api/automation-hub/
+automation_hub_auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
 
 # Force issue of certificates for testing, set to false by default but if you 
 # get errors from spinning it back up and down quickyly, set to true.
 force: False
+
