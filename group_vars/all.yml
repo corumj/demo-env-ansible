@@ -3,16 +3,19 @@ aws_profile: default
 aws_region: us-east-2 
 aws_instance_type: t2.medium 
 ansible_user: ec2-user 
-test_az: us-east-2c
-dev_az: us-east-2b
+test_az: us-east-2c  # these are somewhat arbitrary, fair warning, 
+dev_az: us-east-2b  # provisioning can happen in either by selecting test or dev environments
 
-# SSH Key defaults
+# SSH Key defaults to your generic id_rsa.pub key so you don't have to use ssh agent to ssh to the infra servers
 public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  
-acme_account_key_path: ~/.ssh/acme_key 
-private_key_path: ~/.ssh/cert_key
 
+## certificate related ssh keys/csr paths
+acme_account_key_path: "{{ playbook_dir }}/generated_files/acme_key"
+acme_private_key_path: "{{ playbook_dir }}/generated_files/cert_key"
+controller_csr_path: "{{ playbook_dir }}/generated_files/{{ controller_dns }}"
+hub_csr_path: "{{ playbook_dir }}/generated_files/{{ hub_dns }}"
+
+# DNS Information needed for certificate request
 controller_dns: ansible.{{ top_level_domain }}
 hub_dns: hub.{{ top_level_domain }}
 
-controller_csr_path: ~/.ssh/{{ controller_dns }}
-hub_csr_path: ~/.ssh/{{ hub_dns }}

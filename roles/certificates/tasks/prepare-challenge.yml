@@ -5,19 +5,19 @@
 
 - name: Generate certifcate private key 
   openssl_privatekey:
-    path: "{{ private_key_path }}"
+    path: "{{ acme_private_key_path }}"
     size: 2048 
 
 - name: Create a CSR for Controller
   openssl_csr:
     path: "{{ controller_csr_path }}"
-    privatekey_path: "{{ private_key_path }}"
+    privatekey_path: "{{ acme_private_key_path }}"
     common_name: "{{ controller_dns }}"
 
 - name: Create a CSR for Hub
   openssl_csr:
     path: "{{ hub_csr_path }}"
-    privatekey_path: "{{ private_key_path }}"
+    privatekey_path: "{{ acme_private_key_path }}"
     common_name: "{{ hub_dns }}"
 
 
@@ -26,9 +26,9 @@
     account_key_src: "{{ acme_account_key_path }}"
     account_email: "{{ redhat_email }}"
     csr: "{{ controller_csr_path }}"
-    dest: "{{ playbook_dir }}/controller"
+    dest: "{{ playbook_dir }}/generated_files/controller"
     challenge: dns-01 
-    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 
     terms_agreed: yes 
     remaining_days: 10 
@@ -40,9 +40,9 @@
     account_key_src: "{{ acme_account_key_path }}"
     account_email: "{{ redhat_email }}"
     csr: "{{ hub_csr_path }}"
-    dest: "{{ playbook_dir }}/hub"
+    dest: "{{ playbook_dir }}/generated_files/hub"
     challenge: dns-01 
-    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 
     terms_agreed: yes 
     remaining_days: 10 

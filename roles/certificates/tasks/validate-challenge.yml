@@ -3,10 +3,10 @@
     account_key_src: "{{ acme_account_key_path }}"
     account_email: "{{ redhat_email }}"
     csr: "{{ hub_csr_path }}"
-    dest: "{{ playbook_dir }}/hub"
-    fullchain_dest: "{{ playbook_dir }}/hub_chain"
+    dest: "{{ playbook_dir }}/generated_files/hub"
+    fullchain_dest: "{{ playbook_dir }}/generated_files/hub_chain"
     challenge: dns-01 
-    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 
     terms_agreed: yes 
     remaining_days: 10 
@@ -20,10 +20,10 @@
     account_key_src: "{{ acme_account_key_path }}"
     account_email: "{{ redhat_email }}"
     csr: "{{ controller_csr_path }}"
-    dest: "{{ playbook_dir }}/controller"
-    fullchain_dest: "{{ playbook_dir }}/controller_chain"
+    dest: "{{ playbook_dir }}/generated_files/controller"
+    fullchain_dest: "{{ playbook_dir }}/generated_files/controller_chain"
     challenge: dns-01 
-    acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory #staging currently
+    acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 
     terms_agreed: yes 
     remaining_days: 10 
