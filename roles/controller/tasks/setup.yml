@@ -46,8 +46,11 @@
 - name: Set Installer Log location to generated_files location 
   ansible.builtin.lineinfile:
     path: ~/aap_install/setup.sh
-    regexp: 'LOG_FILE="${LOG_DIR}/setup-${TIMESTAMP}.log"'
-    line: 'LOG_FILE="generated_files/setup-${TIMESTAMP}.log"'
+    regexp: "{{ old_line }}"
+    line: "{{ new_line }}"
+  vars:
+    old_line: LOG_FILE="${LOG_DIR}/setup-${TIMESTAMP}.log"
+    new_line: LOG_FILE="generated_files/setup-${TIMESTAMP}.log"
 
 - name: template inventory file for Ansible Controller Install
   template:
@@ -63,18 +66,12 @@
 
 - name: wait for Automation Controller to be up
   uri:
-    url: https://localhost/api/v2/ping/
+    url: https://ansible.{{ top_level_domain }}/api/v2/ping/
     method: GET
     user: admin
     password: "{{ admin_password }}"
     validate_certs: false
   register: check2
-  # wait <= 10 minutes for a satisfactory result, which is
-  #   - something is returned
-  #   - instance_groups[*].capacity > 0
-  #   - instances[*].capacity > 0
-  # if capacity is 0, execution later fails with a seemingly unrelated urllib TLS version error
-  # we only check instance{s,groups}[0] because we're not clustering
   until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
   retries: 60
   delay: 10
