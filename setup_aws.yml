@@ -20,7 +20,7 @@
     - name: Provision clustered AAP Instances 
       include_role: 
         name: aws-ec2-provision 
-        tasks_from: clustered_aap.yml
+        tasks_from: "{{ install_strategy }}_aap.yml"
       vars:
         aws_instance_type: m4.xlarge 
 
@@ -66,3 +66,13 @@
         ttl: 300
         wait: yes
         overwrite: yes
+
+- name: Ensure all hosts are subscribed to RH repos 
+  hosts: demo_controller,demo_hub 
+  tasks:
+    - name: Register and auto-subscribe to available content 
+      community.general.redhat_subscription:
+        state: present 
+        username: "{{ redhat_username }}"
+        password: "{{ redhat_password }}"
+        auto_attach: true 

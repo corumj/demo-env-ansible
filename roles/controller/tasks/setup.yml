@@ -45,7 +45,7 @@
 
 - name: template inventory file for Ansible Controller Install
   template:
-    src: "controller_install.j2"
+    src: "{{ install_strategy }}_controller_install.j2"
     dest: "~/aap_install/inventory"
 
 - name: run the Automation Controller installer
