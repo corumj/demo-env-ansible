@@ -4,12 +4,6 @@ pushd "$( dirname "${BASH_SOURCE[0]}" )"
 # Install required collection dependencies 
 ansible-galaxy collection install -r collections/requirements.yml
 
-if [$? -eq 0 ]; then
-  echo "Collections successfully installed\n"
-else
-  echo "FAILED to install collections, check your settings and ansible.cfg file.  Error: $retval"
-  exit 1
-fi 
 # Configure your access to Automation Hub
 if ansible-playbook -i aws_ec2.yml -e @extra_vars.yml setup_local.yml; then 
   echo "Successfully created your ansible.cfg file to access Automation Hub"
