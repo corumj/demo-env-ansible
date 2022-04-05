@@ -43,6 +43,12 @@
     remote_src: true
     extra_opts: ['--strip-components=1', '--show-stored-names']
 
+- name: Set Installer Log location to generated_files location 
+  ansible.builtin.lineinfile:
+    path: ~/aap_install/setup.sh
+    regexp: 'LOG_FILE="${LOG_DIR}/setup-${TIMESTAMP}.log"'
+    line: 'LOG_FILE="generated_files/setup-${TIMESTAMP}.log"'
+
 - name: template inventory file for Ansible Controller Install
   template:
     src: "{{ install_strategy }}_controller_install.j2"
