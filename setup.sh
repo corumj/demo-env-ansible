@@ -1,16 +1,17 @@
 #!/bin/bash
 
 pushd "$( dirname "${BASH_SOURCE[0]}" )"
-# Install required collection dependencies 
-ansible-galaxy collection install -r collections/requirements.yml
 
 # Configure your access to Automation Hub
-if ansible-playbook -i aws_ec2.yml -e @extra_vars.yml setup_local.yml; then 
+if ansible-playbook -e @extra_vars.yml setup_local.yml; then 
   echo "Successfully created your ansible.cfg file to access Automation Hub"
 else
   echo "FAILED to setup local environment, please see error"
   exit 1 
 fi 
+
+# Install required collection dependencies 
+ansible-galaxy collection install -r collections/requirements.yml
 
 # Setup AWS Infrastructure 
 if ansible-playbook -i aws_ec2.yml -e @extra_vars.yml setup_aws.yml; then 

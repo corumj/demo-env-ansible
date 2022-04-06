@@ -67,12 +67,25 @@
         wait: yes
         overwrite: yes
 
-# - name: Ensure all hosts are subscribed to RH repos 
-#   hosts: demo_controller,demo_hub 
-#   tasks:
-#     - name: Register and auto-subscribe to available content 
-#       community.general.redhat_subscription:
-#         state: present 
-#         username: "{{ redhat_username }}"
-#         password: "{{ redhat_password }}"
-#         auto_attach: true 
+- name: Ensure all hosts are subscribed to RH repos 
+  hosts: demo_controller,demo_hub,demo_db 
+  become: true 
+  tasks:
+    - name: Register and auto-subscribe to available content 
+      community.general.redhat_subscription:
+        state: present 
+        username: "{{ redhat_username }}"
+        password: "{{ redhat_password }}"
+        auto_attach: true 
+
+    - name: Set Insights configuration 
+      redhat.insights.insights_config:
+        username: "{{ redhat_username }}"
+        password: "{{ redhat_password }}"
+        auto_config: True 
+        authmethod: "BASIC"
+
+    - name: Register systems with Insights 
+      redhat.insights.insights_register:
+        state: present 
+

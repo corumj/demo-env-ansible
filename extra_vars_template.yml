@@ -7,6 +7,8 @@ top_level_domain: sandbox1234.opentlc.com # this comes from the RHPDS email
 
 #### This section is important for initial setup, and if you haven't used this repo in more than 30 days, you will need to update the offline tokens.
 
+# Install AAP2 with a variety of demo playbooks ready to go 
+with_demos: false 
 # Create an API offline token for access.redhat.com here: https://access.redhat.com/management/api
 api_offline_token: tokengoeshere
 
@@ -16,7 +18,9 @@ hub_offline_token: tokengoeshere
 # Required for podman authentication to registry.redhat.io
 redhat_username: user1
 redhat_password: pas1
-redhat_email: user1@company1.com
+
+# Valid email for certificate request
+cert_email: user1@company1.com
 
 # initial admin password for Ansible control node
 admin_password: mypassword

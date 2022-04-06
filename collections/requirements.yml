@@ -8,8 +8,6 @@ collections:
     version: 4.1.1
   - name: containers.podman 
     version: 1.9.3
-  - name: redhat.redhat_csp_download
-    version: 1.2.1
   - name: community.general 
     version: 4.6.1
   - name: community.crypto
@@ -22,3 +20,7 @@ collections:
     version: 2.1.2
   - name: community.crypto
     version: 2.2.4
+  - name: redhat_cop.controller_configuration
+    version: 2.1.4
+  - name: redhat.insights 
+    version: 1.0.7

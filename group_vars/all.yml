@@ -8,6 +8,7 @@ dev_az: us-east-2b  # provisioning can happen in either by selecting test or dev
 
 # SSH Key defaults to your generic id_rsa.pub key so you don't have to use ssh agent to ssh to the infra servers
 public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"  
+private_key: "{{ lookup('file', '~/.ssh/id_rsa') }}"  
 
 ## certificate related ssh keys/csr paths
 acme_account_key_path: "{{ playbook_dir }}/generated_files/acme_key"
