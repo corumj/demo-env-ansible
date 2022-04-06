@@ -5,7 +5,7 @@ This will most likely only be useful do you if you are a Red Hat employee or par
 
 ## Requirements
 1. A valid subscription manifest file, named manifest.zip and located in the root folder of this repository.
-2. Red Hat Open Environments AWS Credentials setup to work with Boto3 in a default profile 
+2. Red Hat Open Environments AWS Credentials [setup](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) to work with Boto3 in a default profile 
 3. Red Hat API Offline Token (see `extra_vars_template.yml` for details)
 4. Red Hat Automation Hub Offline Token (see `extra_vars_template.yml` for details)
 
