@@ -11,18 +11,6 @@
         name: controller
         tasks_from: setup.yml
 
-    - name: wait for Automation Controller to be up
-      uri:
-        url: https://localhost/api/v2/ping/
-        method: GET
-        user: admin
-        password: "{{admin_password}}"
-        validate_certs: false
-      register: check2
-      until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
-      retries: 60
-      delay: 10
-
     - name: Display /api/v2/ping results
       debug:
         msg: '{{ check2.json }}'
