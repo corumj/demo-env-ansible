@@ -30,39 +30,42 @@
   retries: 15
   delay: 20
 
-- name: create directory for automation controller
-  file:
-    path: "~/aap_install"
-    state: directory
-  register: aap_install_dir
+- name: Prepare and Run AAP Setup
+  block:
+    - name: create directory for automation controller
+      file:
+        path: "~/aap_install"
+        state: directory
+      register: aap_install_dir
 
-- name: Extract aap tar.gz installer 
-  unarchive:
-    src: /tmp/aap.tar.gz
-    dest: "~/aap_install/"
-    remote_src: true
-    extra_opts: ['--strip-components=1', '--show-stored-names']
+    - name: Extract aap tar.gz installer 
+      unarchive:
+        src: /tmp/aap.tar.gz
+        dest: "~/aap_install/"
+        remote_src: true
+        extra_opts: ['--strip-components=1', '--show-stored-names']
 
-- name: Set Installer Log location to generated_files location 
-  ansible.builtin.lineinfile:
-    path: ~/aap_install/setup.sh
-    regexp: "{{ old_line }}"
-    line: "{{ new_line }}"
-  vars:
-    old_line: LOG_FILE="${LOG_DIR}/setup-${TIMESTAMP}.log"
-    new_line: LOG_FILE="generated_files/setup-${TIMESTAMP}.log"
+    - name: Set Installer Log location to generated_files location 
+      ansible.builtin.lineinfile:
+        path: ~/aap_install/setup.sh
+        regexp: "{{ old_line }}"
+        line: "{{ new_line }}"
+      vars:
+        old_line: LOG_DIR="/var/log/tower"
+        new_line: LOG_DIR="{{ playbook_dir}}/generated_files"
 
-- name: template inventory file for Ansible Controller Install
-  template:
-    src: "{{ install_strategy }}_controller_install.j2"
-    dest: "~/aap_install/inventory"
+    - name: template inventory file for Ansible Controller Install
+      template:
+        src: "{{ install_strategy }}_controller_install.j2"
+        dest: "~/aap_install/inventory"
 
-- name: run the Automation Controller installer
-  shell: "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0"
-  args:
-    chdir: "~/aap_install"
-  async: 2700
-  poll: 30
+    - name: run the Automation Controller installer
+      shell: "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0"
+      args:
+        chdir: "~/aap_install"
+      async: 2700
+      poll: 30
+  # become: yes
 
 - name: wait for Automation Controller to be up
   uri:
