@@ -69,7 +69,7 @@
 
 - name: wait for Automation Controller to be up
   uri:
-    url: https://ansible.{{ top_level_domain }}/api/v2/ping/
+    url: https://controller.{{ top_level_domain }}/api/v2/ping/
     method: GET
     user: admin
     password: "{{ admin_password }}"

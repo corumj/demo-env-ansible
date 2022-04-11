@@ -17,6 +17,6 @@ controller_csr_path: "{{ playbook_dir }}/generated_files/{{ controller_dns }}"
 hub_csr_path: "{{ playbook_dir }}/generated_files/{{ hub_dns }}"
 
 # DNS Information needed for certificate request
-controller_dns: ansible.{{ top_level_domain }}
+controller_dns: controller.{{ top_level_domain }}
 hub_dns: hub.{{ top_level_domain }}
 

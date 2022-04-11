@@ -61,10 +61,10 @@
   set_fact:
     controller_challenge_record: "{{ controller_dns_challenge.challenge_data[controller_dns]['dns-01'].record }}"
     controller_challenge_value: "{{ controller_dns_challenge.challenge_data[controller_dns]['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
-  when: controller_dns_challenge is changed
+  when: controller_dns_challenge.challenge_data
 
 - name: set hub_challenge_record fact 
   set_fact:
     hub_challenge_record: "{{ hub_dns_challenge.challenge_data[hub_dns]['dns-01'].record }}"
     hub_challenge_value: "{{ hub_dns_challenge.challenge_data[hub_dns]['dns-01'].resource_value | regex_replace('^(.*)$', '\"\\1\"') }}"
-  when: hub_dns_challenge is changed
+  when: hub_dns_challenge.challenge_data

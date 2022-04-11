@@ -63,7 +63,7 @@
         profile: "{{ aws_profile }}"
         state: present 
         zone: "{{ top_level_domain }}"
-        record: "ansible.{{ top_level_domain }}"
+        record: "controller.{{ top_level_domain }}"
         type: A
         value: "{{ groups['demo_controller'] | map('extract', hostvars, ['public_ip_address'] | join(',')) }}"
         ttl: 300
@@ -111,8 +111,8 @@
         group: ec2-user 
         mode: "{{ item.key_mode }}"
       loop:
-        - { source: generated_files/platform_id_rsa, name: id_rsa, key_mode: 0600 }
-        - { source: generated_files/platform_id_rsa.pub, name: id_rsa.pub, key_mode: 0644 }
+        - { source: generated_files/platform_id_rsa, name: id_rsa, key_mode: '0600' }
+        - { source: generated_files/platform_id_rsa.pub, name: id_rsa.pub, key_mode: '0644' }
 
     - name: Add keys to authorized_keys on all hosts 
       ansible.posix.authorized_key:

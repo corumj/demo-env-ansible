@@ -9,7 +9,7 @@
 # hybrid.example  node_type=hybrid
 # hybrid2.example <- this will default to hybrid
 [automationcontroller]
-{{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }} node_type=hybrid
+controller.{{ top_level_domain }} ansible_host={{ hostvars[groups['demo_controller'][0]]['private_ip_address'] }} node_type=hybrid
 
 [automationcontroller:vars]
 peers=execution_nodes
@@ -27,7 +27,7 @@ peers=execution_nodes
 [execution_nodes]
 
 [automationhub]
-{{ hostvars[groups['demo_hub'][0]]['private_dns_name'] }}
+hub.{{ top_level_domain }} ansible_host={{ hostvars[groups['demo_hub'][0]]['private_ip_address'] }}
 
 [database]
 
@@ -70,7 +70,7 @@ receptor_listener_port=27199
 
 automationhub_admin_password='{{ admin_password }}'
 
-automationhub_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }}'
+automationhub_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_ip_address'] }}'
 automationhub_pg_port='5432'
 
 automationhub_pg_database='automationhub'

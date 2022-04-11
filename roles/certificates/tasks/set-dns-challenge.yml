@@ -9,7 +9,7 @@
     ttl: 60
     wait: yes
     overwrite: yes
-  when: hub_dns_challenge is changed
+  when: hub_dns_challenge.challenge_data
 
 - name: Setup automation controller dns check for acme challenge 
   community.aws.route53:
@@ -22,4 +22,4 @@
     ttl: 60
     wait: yes
     overwrite: yes
-  when: controller_dns_challenge is changed
+  when: controller_dns_challenge.challenge_data

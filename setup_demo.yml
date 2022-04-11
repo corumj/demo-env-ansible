@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local 
   vars:
-    controller_hostname: ansible.{{ top_level_domain }}
+    controller_hostname: controller.{{ top_level_domain }}
     controller_username: admin
     controller_password: "{{ admin_password }}"
   collections:
