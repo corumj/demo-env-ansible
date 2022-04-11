@@ -5,6 +5,9 @@
   collections:
     - amazon.aws
     - community.crypto
+    - community.general
+    - community.aws
+    - redhat.insights
   tasks: 
   # setup infra 
     - name: setup AWS infra
@@ -68,7 +71,7 @@
         overwrite: yes
 
 - name: Ensure all hosts are subscribed to RH repos 
-  hosts: demo_controller,demo_hub,demo_db 
+  hosts: aws_ec2
   become: true 
   tasks:
     - name: Register and auto-subscribe to available content 
@@ -88,4 +91,34 @@
     - name: Register systems with Insights 
       redhat.insights.insights_register:
         state: present 
+
+- name: Exchange SSH keys for entire group 
+  hosts: aws_ec2 
+  # become: yes
+
+  tasks:
+    - name: Generate SSH Key pair 
+      community.crypto.openssh_keypair:
+        path: generated_files/platform_id_rsa 
+      delegate_to: localhost
+      run_once: True
+
+    - name: Copy platform SSH keys to remote servers 
+      copy:
+        src: "{{ item.source }}"
+        dest: /home/ec2-user/.ssh/{{ item.name }}
+        owner: ec2-user 
+        group: ec2-user 
+        mode: "{{ item.key_mode }}"
+      loop:
+        - { source: generated_files/platform_id_rsa, name: id_rsa, key_mode: 0600 }
+        - { source: generated_files/platform_id_rsa.pub, name: id_rsa.pub, key_mode: 0644 }
+
+    - name: Add keys to authorized_keys on all hosts 
+      ansible.posix.authorized_key:
+        user: ec2-user 
+        state: present
+        key: "{{ lookup('file', 'generated_files/platform_id_rsa.pub') }}"
+
+
 

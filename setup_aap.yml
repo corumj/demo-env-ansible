@@ -1,9 +1,9 @@
 ---       
 - name: Install controller and hub 
-  hosts: localhost
-  connection: local sys
+  hosts: demo_controller[0]
   vars:
     ansible_user: ec2-user
+  become: yes
   tasks:
 
     - name: Controller Setup 

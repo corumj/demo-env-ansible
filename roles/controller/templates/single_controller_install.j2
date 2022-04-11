@@ -9,7 +9,7 @@
 # hybrid.example  node_type=hybrid
 # hybrid2.example <- this will default to hybrid
 [automationcontroller]
-{{ hostvars[groups['demo_controller'][0]]['public_dns_name'] }} node_type=hybrid
+{{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }} node_type=hybrid
 
 [automationcontroller:vars]
 peers=execution_nodes
@@ -27,7 +27,7 @@ peers=execution_nodes
 [execution_nodes]
 
 [automationhub]
-{{ hostvars[groups['demo_hub'][0]]['public_dns_name'] }}
+{{ hostvars[groups['demo_hub'][0]]['private_dns_name'] }}
 
 [database]
 
@@ -43,9 +43,11 @@ peers=execution_nodes
 [all:vars]
 admin_password='{{ admin_password }}'
 ansible_user='ec2-user'
+# https://stackoverflow.com/questions/26256227/ansible-with-multiple-ssh-key-pair
+ansible_ssh_private_key_file=/home/ec2-user/.ssh/id_rsa
 
-pg_host='{{ hostvars[groups['demo_db'][0]]['private_dns_name'] }}'
-pg_port='5432'
+pg_host=''
+pg_port=''
 
 pg_database='awx'
 pg_username='awx'
@@ -68,7 +70,7 @@ receptor_listener_port=27199
 
 automationhub_admin_password='{{ admin_password }}'
 
-automationhub_pg_host='{{ hostvars[groups['demo_db'][0]]['private_dns_name'] }}'
+automationhub_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_dns_name'] }}'
 automationhub_pg_port='5432'
 
 automationhub_pg_database='automationhub'
@@ -80,7 +82,7 @@ automationhub_pg_sslmode='prefer'
 # clients will connect to (e.g. https://<load balancer host>).
 # If not specified, the first node in the [automationhub] group will be used.
 #
-# automationhub_main_url = ''
+automationhub_main_url = 'https://hub.{{ top_level_domain }}'
 
 # By default if the automation hub package and its dependencies
 # are installed they won't get upgraded when running the installer
