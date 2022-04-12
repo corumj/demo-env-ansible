@@ -1,0 +1,18 @@
+---
+# Use this playbook to stop services when you're done for the day
+# but want to continue working later and save costs.  
+- name: Stop AAP instances
+  hosts: localhost 
+  connection: local
+  gather_facts: no 
+
+  tasks:
+    - name: Stop all demo AWS instances 
+      amazon.aws.ec2_instance:
+        profile: "{{ aws_profile }}"
+        region: "{{ aws_region }}"
+        filters:
+          tag:business_domain_name: "{{ top_level_domain }}"
+          tag:demo: "Ansible" 
+          instance-state-name: running
+        state: stopped

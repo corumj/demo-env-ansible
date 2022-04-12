@@ -1,0 +1,58 @@
+---
+- name: Start AAP Instances 
+  hosts: localhost
+  connection: local 
+  gather_facts: no 
+
+  tasks:
+    - name: Find AAP EC2 Instances 
+      amazon.aws.ec2_instance_info:
+        profile: "{{ aws_profile }}"
+        region: "{{ aws_region }}"
+        filters:
+          tag:business_domain_name: "{{ top_level_domain }}"
+          tag:demo: "Ansible" 
+          instance-state-name: stopped
+      register: instances 
+
+    - name: Start all demo AWS instances 
+      amazon.aws.ec2_instance:
+        profile: "{{ aws_profile }}"
+        region: "{{ aws_region }}"
+        instance_ids: "{{ instances | json_query('instances[*].instance_id') }}"
+        state: running
+        wait: yes
+      when: instances.instances
+
+    - name: Refresh Inventory
+      meta: refresh_inventory
+
+    - name: Setup Route 53 for hub domain name 
+      community.aws.route53:
+        profile: "{{ aws_profile }}"
+        state: present 
+        zone: "{{ top_level_domain }}"
+        record: "hub.{{ top_level_domain }}"
+        type: A
+        value: "{{ hostvars[groups['demo_hub'][0]]['public_ip_address'] }}"
+        ttl: 300
+        wait: yes
+        overwrite: yes
+
+  # Copied this map extract business from here and adapted it: https://stackoverflow.com/a/39932728
+    - name: Setup Route 53 for controller domain name 
+      community.aws.route53:
+        profile: "{{ aws_profile }}"
+        state: present 
+        zone: "{{ top_level_domain }}"
+        record: "controller.{{ top_level_domain }}"
+        type: A
+        value: "{{ groups['demo_controller'] | map('extract', hostvars, ['public_ip_address'] | join(',')) }}"
+        ttl: 300
+        wait: yes
+        overwrite: yes
+
+    - debug:
+        msg: 
+          - "Access Automation Controller: https://controller.{{ top_level_domain }}"
+          - "Access Private Automation Hub: https://hub.{{ top_level_domain }}"
