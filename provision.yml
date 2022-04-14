@@ -25,3 +25,8 @@
         name: aws-ec2-provision
         tasks_from: linux.yml 
       when: server_os == 'linux'
+
+    - name: Update deprovision list 
+      include_role:
+        name: aws-ec2-deprovision
+        tasks_from: update_deprovision_list.yml

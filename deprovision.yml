@@ -1,0 +1,25 @@
+---
+- name: Provision Windows/Linux Server Instances 
+  hosts: localhost 
+  gather_facts: no 
+  vars:
+      # group_name: "{{ survey_group_name }}"
+      server_name: "{{ survey_server_name }}"
+      # server_env: "{{ survey_server_env }}" 
+      # server_os: "{{ survey_server_os }}"
+
+  tasks:
+    # - name: Gather required provisioning information 
+    #   include_role:
+    #     name: aws-infra-info
+    #     tasks_from: controller.yml
+
+    - name: Deprovision Instance/Instances 
+      include_role:
+        name: aws-ec2-deprovision 
+        tasks_from: instance_deprovision.yml
+
+    - name: Update deprovision list 
+      include_role:
+        name: aws-ec2-deprovision
+        tasks_from: update_deprovision_list.yml

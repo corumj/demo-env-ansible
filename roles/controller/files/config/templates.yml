@@ -9,6 +9,8 @@ controller_templates:
       - "Ansible Controller"
     project: Demo Environment Tools
     playbook: provision.yml
+    extra_vars:
+      top_level_domain: "{{ top_level_domain }}"
     survey_enabled: yes 
     survey_spec: 
       name: ''

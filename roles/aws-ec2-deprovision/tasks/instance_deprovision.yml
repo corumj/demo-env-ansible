@@ -1,0 +1,14 @@
+--- 
+- name: Deprovision ec2 instance 
+  amazon.aws.ec2_instance:
+    state: absent
+    filters:
+      # "tag:business_domain_name": "{{ business_domain_name }}"
+      "tag:server_name": "{{ server_name }}"
+      "tag:demo": Ansible 
+      instance-state-name: running 
+    wait: yes
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+  register: deprovision

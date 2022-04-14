@@ -30,6 +30,7 @@
       server_os: "{{ item.server_os }}"
       business_domain_name: "{{ item.business_domain_name }}"
       demo: Ansible 
+      demo_core: true
     wait: yes
     region: "{{ aws_region }}"
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"

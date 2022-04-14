@@ -2,16 +2,19 @@
 collections:
   - name: community.aws
     version: 3.1.0
-    source: https://galaxy.ansible.com
   - name: community.postgresql
     version: 2.1.2
-    source: https://galaxy.ansible.com
   - name: community.crypto
     version: 2.2.4
-    source: https://galaxy.ansible.com
   - name: community.general 
     version: 4.6.1
-    source: https://galaxy.ansible.com
   - name: community.crypto
     version: 2.2.4
-    source: https://galaxy.ansible.com
+  - name: containers.podman 
+    version: 1.9.3
+  - name: redhat_cop.controller_configuration
+    version: 2.1.4
+  - name: redhat_cop.ah_configuration
+    version: 0.6.1
+  - name: community.windows
+    version: 1.9.0
