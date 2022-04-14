@@ -2,7 +2,7 @@
   block:
     - name: retrieve vpc ID                 
       amazon.aws.ec2_vpc_net_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -12,7 +12,7 @@
 
     - name: retrieve vpc test subnet info 
       amazon.aws.ec2_vpc_subnet_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -23,7 +23,7 @@
 
     - name: retrieve vpc dev subnet info 
       amazon.aws.ec2_vpc_subnet_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -34,7 +34,7 @@
 
     - name: retrieve vpc all subnet info 
       amazon.aws.ec2_vpc_subnet_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -44,7 +44,7 @@
 
     - name: retrieve vpc route table id 
       amazon.aws.ec2_vpc_route_table_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -54,7 +54,7 @@
 
     - name: Retrieve Security Group info 
       amazon.aws.ec2_group_info:
-        profile: "{{ aws_profile | default('') }}"
+        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
