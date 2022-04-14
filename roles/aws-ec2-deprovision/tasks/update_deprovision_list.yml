@@ -8,11 +8,13 @@
       instance-state-name: running 
       # tag:business_domain_name: Red Hat 
       tag:demo: Ansible 
-      tag:demo_core: false
+      #tag:demo_core: false
   register: ec2 
 
 - debug:
-    msg: "{{ ec2 | community.general.json_query('instances[*].tags.server_name') | join('\n') }}"
+    msg: "{{ ec2 | community.general.json_query(query_core) }}"
+  vars:
+    query_core: "instances[?tags.demo_core != 'True'].tags.Name"
     
 - name: Update  Deprovision Template
   ansible.controller.job_template:
@@ -39,7 +41,7 @@
               "min": null,
               "max": null,
               "default": "",
-              "choices": "{{ ec2 | community.general.json_query('instances[*].tags.server_name') | join('\n') }}"
+              "choices": "{{ ec2 | community.general.json_query(query_core) }}"
           }
         ]
       }
@@ -48,3 +50,5 @@
     controller_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
     validate_certs: true
+  vars:
+    query_core: "instances[?tags.demo_core != 'True'].tags.Name"
