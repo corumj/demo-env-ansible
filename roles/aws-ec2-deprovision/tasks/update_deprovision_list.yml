@@ -11,6 +11,9 @@
       tag:demo_core: false
   register: ec2 
 
+- debug:
+    msg: "{{ ec2 | community.general.json_query('instances[*].tags.server_name') | join('\n') }}"
+    
 - name: Update  Deprovision Template
   ansible.controller.job_template:
     name: "2. Deprovision"
@@ -32,7 +35,7 @@
               "question_description": "",
               "required": true,
               "type": "multiselect",
-              "variable": "survey_short_desc",
+              "variable": "survey_server_name",
               "min": null,
               "max": null,
               "default": "",
