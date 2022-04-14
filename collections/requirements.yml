@@ -16,13 +16,19 @@ collections:
     version: 1.0.7
   - name: redhat_cop.ah_configuration
     version: 0.6.1
+    source: https://galaxy.ansible.com
   - name: community.aws
     version: 3.1.0
+    source: https://galaxy.ansible.com
   - name: community.postgresql
     version: 2.1.2
+    source: https://galaxy.ansible.com
   - name: community.crypto
     version: 2.2.4
+    source: https://galaxy.ansible.com
   - name: community.general 
     version: 4.6.1
+    source: https://galaxy.ansible.com
   - name: community.crypto
     version: 2.2.4
+    source: https://galaxy.ansible.com
