@@ -1,0 +1,19 @@
+---
+- name: Provision Windows/Linux Server Instances 
+  hosts: localhost 
+  gather_facts: no 
+  vars:
+      group_name: "{{ survey_group_name }}"
+      server_name: "{{ survey_server_name }}"
+      server_env: "{{ survey_server_env }}" 
+      server_os: "{{ survey_server_os }}"
+
+  tasks:
+    - name: Gather required provisioning information 
+      include_role:
+        name: aws-infra-info
+
+    - name: Provision Windows instance if requested 
+      include_role:
+        - name: aws-ec2-provision 
+          tasks_from: windows.yml 

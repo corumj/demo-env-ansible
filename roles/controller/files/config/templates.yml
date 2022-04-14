@@ -1,0 +1,13 @@
+controller_templates:
+  - name: 1. Provision 
+    description: Use to provision Windows or Linux servers
+    job_type: run
+    inventory: AWS
+    labels:
+      - Prod
+    credentials: 
+      - AWS
+      - AWS Windows
+      - AWS Linux 
+    project: Demo Environment Tools
+    playbook: provision.yml

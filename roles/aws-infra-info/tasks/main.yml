@@ -32,6 +32,16 @@
           "tag:env": dev
       register: vpc_dev_subnet_info
 
+    - name: retrieve vpc all subnet info 
+      amazon.aws.ec2_vpc_subnet_info:
+        profile: "{{ aws_profile | default('') }}"
+        region: "{{ aws_region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        filters:
+          "tag:demo": Ansible
+      register: vpc_subnet_info
+
     - name: retrieve vpc route table id 
       amazon.aws.ec2_vpc_route_table_info:
         profile: "{{ aws_profile | default('') }}"

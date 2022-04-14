@@ -1,0 +1,36 @@
+---
+- name: Find AMI for Windows Host 
+  amazon.aws.ec2_ami_info:
+    region: "{{ aws_region }}"
+    filters:
+      name: 'Windows_Server-2019-English-Core-Base*'
+  register: amis
+
+- name: WINDOWS | Instance | save ami
+  set_fact:
+    win_instance_ami: >
+      {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+      
+- name: Provision EC2 Windows Instance 
+  vars:
+    query: subnets[?tags.env=='{{ server_env }}'] | [0].subnet_id
+  amazon.aws.ec2_instance:
+    state: started
+    name: "{{ server_env }}-{{ server_name }}-{{ server_os }}"
+    security_group: "{{ sec_info.security_groups[0].group_name }}"
+    vpc_subnet_id: "{{ vpc_subnet_info | json_query(query) }}"
+    image_id: "{{ win_instance_ami.image_id }}"
+    instance_type: "{{ aws_instance_type }}"
+    tags: 
+      group_name: "{{ group_name }}"
+      server_name: "{{ server_name }}"
+      server_env: "{{ server_env }}" 
+      server_os: "{{ server_os }}"
+      demo: Ansible 
+      business_domain_name: "{{ top_level_domain }}"
+    user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+    wait: yes
+    region: "{{ aws_region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+  register: ec2 
