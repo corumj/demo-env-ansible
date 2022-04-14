@@ -18,7 +18,7 @@
     state: started
     name: "{{ server_env }}-{{ server_name }}-{{ server_os }}"
     security_group: "{{ sec_info.security_groups[0].group_name }}"
-    vpc_subnet_id: "{{ vpc_subnet_info | json_query(query) }}"
+    vpc_subnet_id: "{{ vpc_subnet_info | community.general.json_query(query) }}"
     image_id: "{{ win_instance_ami.image_id }}"
     instance_type: "{{ aws_instance_type }}"
     tags: 
