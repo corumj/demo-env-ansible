@@ -33,8 +33,7 @@ This will most likely only be useful do you if you are a Red Hat employee or par
   - admin_password
   - top_level_domain
   > I recommend running the entire setup process with the Let's Encrypt Staging directory first to ensure setup will complete.  After that you can uncomment the production directory url in the extra_vars.yml file permanently on your machine. 
-4. Run `ansible-galaxy collection install -r collections/requirements.yml
-5. Run `./setup.sh`
+4. Run `./setup.sh`
   - This will first run setup_local.yml to template your ansible.cfg file properly for Automation Hub collections
   - It will then run setup_aws.yml which will prepare the infrastructure AAP will run on 
   - Finally it runs setup_aap.yml to install AAP and configure your environment.  
