@@ -1,0 +1,29 @@
+---
+- name: Create a config directory if it does not exist 
+  ansible.builtin.file:
+    path: "{{ ah_configuration_working_dir }}"
+    state: directory 
+    mode: '0755'
+
+# - name: Authenticate and get an API token 
+#   redhat_cop.ah_configuration.ah_token:
+#     ah_host: "{{ ah_hostname }}"
+#     ah_username: "{{ ah_username }}"
+#     ah_password: "{{ ah_password }}"
+#     ah_path_prefix: "{{ ah_path_prefix }}"
+#     validate_certs: "{{ ah_validate_certs }}"
+
+- name: Configure Supported Repo 
+  redhat_cop.ah_configuration.ah_repository:
+    name: rh-certified 
+    url: https://cloud.redhat.com/api/automation-hub/
+    auth_url: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+    token: "{{ hub_offline_token }}"
+
+# - name: Deauthenticate
+#   redhat_cop.ah_configuration.ah_token:
+#     ah_host: "{{ ah_hostname }}"
+#     ah_token: "{{ ah_token }}"
+#     ah_path_prefix: "{{ ah_path_prefix }}"
+#     validate_certs: "{{ ah_validate_certs }}"
+#     state: absent

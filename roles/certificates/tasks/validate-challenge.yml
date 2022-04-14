@@ -13,7 +13,9 @@
     data: "{{ hub_dns_challenge }}"
     force: "{{ force }}"
   register: hub_cert_valid
-  when: hub_dns_challenge.challenge_data is defined 
+  when: 
+    - hub_dns_challenge is changed 
+    - hub_dns_challenge.challenge_data[hub_dns] is defined
 
 - name: Validate Automation Controller DNS Challenge 
   acme_certificate:
@@ -30,4 +32,6 @@
     data: "{{ controller_dns_challenge }}"
     force: "{{ force }}"
   register: controller_cert_valid
-  when: controller_dns_challenge.challenge_data is defined 
+  when: 
+    - controller_dns_challenge is changed 
+    - controller_dns_challenge.challenge_data[controller_dns] is defined

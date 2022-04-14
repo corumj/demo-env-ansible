@@ -23,7 +23,7 @@ controller_projects:
   - name: Windows Tasks
     scm_type: git
     scm_url: https://github.com/corumj/ansible-windows-admin-tasks
-    scm_branch: platform
+    scm_branch: master
     scm_clean: true
     description: Windows playbooks and roles for demo 
     organization: Default
