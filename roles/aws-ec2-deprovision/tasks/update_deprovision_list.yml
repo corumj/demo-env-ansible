@@ -36,7 +36,7 @@
               "min": null,
               "max": null,
               "default": "",
-              "choices": "{{ ec2 | json_query('instances[*].tags.server_name') | difference(['tower']) | join('\n') }}"
+              "choices": "{{ ec2 | json_query('instances[*].tags.server_name') | join('\n') }}"
           }
         ]
       }
