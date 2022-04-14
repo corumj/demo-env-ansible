@@ -36,7 +36,7 @@
               "min": null,
               "max": null,
               "default": "",
-              "choices": "{{ ec2 | json_query('instances[*].tags.server_name') | join('\n') }}"
+              "choices": "{{ ec2 | community.general.json_query('instances[*].tags.server_name') | join('\n') }}"
           }
         ]
       }
