@@ -1,13 +1,52 @@
 controller_templates:
-  - name: 1. Provision 
+  - name: "1. Provision" 
     description: Use to provision Windows or Linux servers
     job_type: run
     inventory: AWS
-    labels:
-      - Prod
     credentials: 
-      - AWS
-      - AWS Windows
-      - AWS Linux 
+      - "AWS"
+      - "AWS Windows"
+      - "Ansible Controller"
     project: Demo Environment Tools
     playbook: provision.yml
+    survey_enabled: yes 
+    survey_spec: 
+      name: ''
+      description: ''
+      spec:
+        - question_name: Enter the Controller inventory group name for this server.
+          question_description:  Provide an inventory group name for the instance.
+          required: true 
+          type: text
+          variable: survey_group_name
+          min: 3
+          max: 15
+          default: ""
+          choices: "" 
+        - question_name: Enter a short server name (no spaces or special characters).
+          question_description:  Provide a server name for the instance.
+          required: true 
+          type: text
+          variable: survey_server_name
+          min: 3
+          max: 15
+          default: ""
+          choices: "" 
+        - question_name: Select an environment (subnet).
+          question_description:  Choose between test and dev subnets to deploy server.
+          required: true 
+          type: multiplechoice
+          variable: survey_server_env
+          min: null
+          max: null
+          default: "dev"
+          choices: "dev\ntest" 
+        - question_name: Select an approved server operating system.
+          question_description:  Choose between Windows Server 2019 Core and RHEL 8.x
+          required: true 
+          type: multiplechoice
+          variable: survey_server_os
+          min: null
+          max: null
+          default: "windows"
+          choices: "windows\nlinux" 
