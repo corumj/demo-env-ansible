@@ -41,7 +41,7 @@
               "min": null,
               "max": null,
               "default": "",
-              "choices": "{{ ec2 | community.general.json_query(query_core) }}"
+              "choices": "{{ ec2 | community.general.json_query(query_core) | join(',') }}"
           }
         ]
       }
