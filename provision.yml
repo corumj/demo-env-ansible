@@ -12,6 +12,7 @@
     - name: Gather required provisioning information 
       include_role:
         name: aws-infra-info
+        tasks_from: controller.yml
 
     - name: Provision Windows instance if requested 
       include_role:
