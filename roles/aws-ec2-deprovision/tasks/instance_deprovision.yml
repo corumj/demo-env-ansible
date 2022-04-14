@@ -4,7 +4,7 @@
     state: absent
     filters:
       # "tag:business_domain_name": "{{ business_domain_name }}"
-      "tag:server_name": "{{ server_name }}"
+      "tag:Name": "{{ server_name }}"
       "tag:demo": Ansible 
       instance-state-name: running 
     wait: yes

@@ -51,4 +51,4 @@
     controller_host: "{{ lookup('env', 'TOWER_HOST') }}"
     validate_certs: true
   vars:
-    query_core: "instances[?tags.demo_core != 'True'].tags.server_name"
+    query_core: "instances[?tags.demo_core != 'True'].tags.Name"
