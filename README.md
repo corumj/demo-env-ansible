@@ -8,6 +8,7 @@ This will most likely only be useful do you if you are a Red Hat employee or par
 2. Red Hat Open Environments AWS Credentials [setup](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) to work with Boto3 in a `[default]` profile 
 3. Red Hat API Offline Token (see `extra_vars_template.yml` for details)
 4. Red Hat Automation Hub Offline Token (see `extra_vars_template.yml` for details)
+5. An SSH key generated with the default name (id_rsa and id_rsa.pub)
 
 ## Options to think about before starting 
 1. Clustered vs single instance. Can change in extra_vars.yml.  Default is clustered at the moment.  
