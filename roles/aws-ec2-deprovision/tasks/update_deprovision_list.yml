@@ -16,10 +16,10 @@
     name: "2. Deprovision"
     job_type: "run"
     inventory: AWS
-    project: Ansible Demo
+    project: Demo Environment Tools
     playbook: "deprovision.yml"
     credentials: 
-      - "Tower Credential"
+      - "Ansible Controller"
       - "AWS"
     survey_enabled: yes 
     survey_spec: | 
