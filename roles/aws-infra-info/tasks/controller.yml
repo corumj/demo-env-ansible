@@ -31,7 +31,6 @@
 
     - name: retrieve vpc all subnet info 
       amazon.aws.ec2_vpc_subnet_info:
-        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -41,7 +40,6 @@
 
     - name: retrieve vpc route table id 
       amazon.aws.ec2_vpc_route_table_info:
-        profile: "{{ aws_profile | default(omit) }}"
         region: "{{ aws_region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
