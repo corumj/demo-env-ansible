@@ -5,7 +5,7 @@ This will most likely only be useful do you if you are a Red Hat employee or par
 
 ## Requirements
 1. Manifest file for registering Controller, needs to be downloaded and placed in this repo's root folder as `manifest.zip`  See obtaining a subscription manifest for Tower [here](https://docs.ansible.com/ansible-tower/latest/html/userguide/import_license.html#obtaining-a-subscriptions-manifest)
-2. Red Hat Open Environments AWS Credentials [setup](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) to work with Boto3 in a default profile 
+2. Red Hat Open Environments AWS Credentials [setup](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) to work with Boto3 in a `[default]` profile 
 3. Red Hat API Offline Token (see `extra_vars_template.yml` for details)
 4. Red Hat Automation Hub Offline Token (see `extra_vars_template.yml` for details)
 
@@ -32,7 +32,7 @@ This will most likely only be useful do you if you are a Red Hat employee or par
   - redhat_email
   - admin_password
   - top_level_domain
-  > I recommend running the entire setup process with the Let's Encrypt Staging directory first to ensure setup will complete.  After that you can uncomment the production directory url in the extra_vars.yml file permantely on your machine. 
+  > I recommend running the entire setup process with the Let's Encrypt Staging directory first to ensure setup will complete.  After that you can uncomment the production directory url in the extra_vars.yml file permanently on your machine. 
 4. Run `ansible-galaxy collection install -r collections/requirements.yml
 5. Run `./setup.sh`
   - This will first run setup_local.yml to template your ansible.cfg file properly for Automation Hub collections
