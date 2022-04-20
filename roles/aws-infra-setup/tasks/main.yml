@@ -32,6 +32,7 @@
           - 80 # HTTP
           - 443 # HTTPS
           - 22 # SSH
+          - 3389 # RDP
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         to_port: -1
@@ -39,9 +40,7 @@
         cidr_ip: 0.0.0.0/0
       - proto: tcp
         ports: 
-          - 80
           - 5986 # WinRM
-          - 3389 # RDP
           - 53 # DNS
           - 88 # Kerberos Authentication
           - 135 # RPC

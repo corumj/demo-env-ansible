@@ -13,7 +13,7 @@ controller_inventory_sources:
           prefix: demo
           parent_group: os
       compose:
-        ansible_host: private_ip_address
+        ansible_host: public_ip_address
     inventory: AWS
     organization: Default
     credential: AWS

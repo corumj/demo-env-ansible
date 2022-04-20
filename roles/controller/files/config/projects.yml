@@ -33,7 +33,7 @@ controller_projects:
   - name: ServiceNow Tasks
     scm_type: git
     scm_url: https://github.com/corumj/ansible-servicenow-demo
-    scm_branch: platform
+    scm_branch: aap2
     scm_clean: true
     description: ServiceNow playbooks and roles for demo 
     organization: Default
