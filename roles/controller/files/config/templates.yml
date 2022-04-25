@@ -9,6 +9,7 @@ controller_templates:
       - "Ansible Controller"
     project: Demo Environment Tools
     playbook: provision.yml
+    allow_simultaneous: yes
     extra_vars:
       top_level_domain: "{{ top_level_domain }}"
     ask_variables_on_launch: yes

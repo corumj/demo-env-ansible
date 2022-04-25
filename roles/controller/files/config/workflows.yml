@@ -28,7 +28,7 @@ controller_workflows:
       - all_parents_must_converge: false 
         identifier: crypto
         unified_job_template: "[ Linux ] RHEL System Role crypto policy"
-        limit: tag_app_backend,tag_app_database
+        limit: demo_app_backend,demo_app_database
         success_nodes:
           - timesync 
       - all_parents_must_converge: false 
