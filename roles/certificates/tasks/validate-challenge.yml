@@ -4,7 +4,7 @@
     account_email: "{{ cert_email }}"
     csr: "{{ hub_csr_path }}"
     dest: "{{ playbook_dir }}/generated_files/hub"
-    fullchain_dest: "{{ playbook_dir }}/generated_files/hub_chain"
+    fullchain_dest: "{{ playbook_dir }}/generated_files/hub.{{ top_level_domain}}_chain"
     challenge: dns-01 
     acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 
@@ -23,7 +23,7 @@
     account_email: "{{ cert_email }}"
     csr: "{{ controller_csr_path }}"
     dest: "{{ playbook_dir }}/generated_files/controller"
-    fullchain_dest: "{{ playbook_dir }}/generated_files/controller_chain"
+    fullchain_dest: "{{ playbook_dir }}/generated_files/controller.{{ top_level_domain}}_chain"
     challenge: dns-01 
     acme_directory: "{{ acme_directory_server }}"
     acme_version: 2 

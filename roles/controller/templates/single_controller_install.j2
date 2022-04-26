@@ -27,7 +27,7 @@ peers=execution_nodes
 [execution_nodes]
 
 [automationhub]
-hub.{{ top_level_domain }} ansible_host={{ hostvars[groups['demo_hub'][0]]['private_ip_address'] }}
+#hub.{{ top_level_domain }} ansible_host={{ hostvars[groups['demo_hub'][0]]['private_ip_address'] }}
 
 [database]
 
@@ -68,10 +68,10 @@ receptor_listener_port=27199
 # Automation Hub Configuration
 #
 
-automationhub_admin_password='{{ admin_password }}'
+#automationhub_admin_password='{{ admin_password }}'
 
-automationhub_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_ip_address'] }}'
-automationhub_pg_port='5432'
+#automationhub_pg_host='{{ hostvars[groups['demo_controller'][0]]['private_ip_address'] }}'
+#automationhub_pg_port='5432'
 
 automationhub_pg_database='automationhub'
 automationhub_pg_username='automationhub'

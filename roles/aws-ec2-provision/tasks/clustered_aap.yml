@@ -42,7 +42,7 @@
     - { group_name: controller, short_desc: controller1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
     - { group_name: controller, short_desc: controller2, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
     - { group_name: controller, short_desc: controller3, server_env: dev, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_dev_subnet_info.subnets[0].subnet_id }}" }
-    - { group_name: hub, short_desc: hub1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
+    #- { group_name: hub, short_desc: hub1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
     - { group_name: db, short_desc: db1, server_env: test, server_os: linux, business_domain_name: "{{ top_level_domain }}", subnet: "{{ vpc_test_subnet_info.subnets[0].subnet_id }}" }
       
 - name: Wait for provisioning tasks to complete

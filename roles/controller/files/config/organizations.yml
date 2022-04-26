@@ -2,7 +2,6 @@
 controller_organizations:
   - name: Default
     galaxy_credentials:
-      - Automation Hub RH Certified Repository
-      - Automation Hub Community Repository
+      - Ansible Automation Hub
       - Ansible Galaxy
 ...

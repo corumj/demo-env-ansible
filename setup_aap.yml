@@ -55,7 +55,7 @@
   tasks:
     - name: Copy cert
       copy:
-        src: generated_files/controller_chain 
+        src: generated_files/controller.{{ top_level_domain}}_chain 
         dest: /etc/tower/tower.cert
         group: awx
       register: copy_cert
@@ -73,30 +73,30 @@
         state: restarted
       when: copy_cert is changed or copy_key is changed
 
-- name: Copy signed certificates to Automation Hub hosts
-  hosts: demo_hub 
-  vars:
-    ansible_user: ec2-user 
-  become: yes
+# - name: Copy signed certificates to Automation Hub hosts
+#   hosts: demo_hub 
+#   vars:
+#     ansible_user: ec2-user 
+#   become: yes
 
-  tasks:
-    - name: Copy cert
-      copy:
-        src: generated_files/hub_chain 
-        dest: /etc/pulp/certs/pulp_webserver.crt
-      register: copy_cert
+#   tasks:
+#     - name: Copy cert
+#       copy:
+#         src: generated_files/hub.{{ top_level_domain}}_chain 
+#         dest: /etc/pulp/certs/pulp_webserver.crt
+#       register: copy_cert
 
-    - name: Copy key 
-      copy:
-        src: "{{ acme_private_key_path }}"
-        dest: /etc/pulp/certs/pulp_webserver.key
-      register: copy_key
+#     - name: Copy key 
+#       copy:
+#         src: "{{ acme_private_key_path }}"
+#         dest: /etc/pulp/certs/pulp_webserver.key
+#       register: copy_key
 
-    - name: restart nginx 
-      systemd:
-        name: nginx 
-        state: restarted
-      when: copy_cert is changed or copy_key is changed
+#     - name: restart nginx 
+#       systemd:
+#         name: nginx 
+#         state: restarted
+#       when: copy_cert is changed or copy_key is changed
 
 - name: Display AAP access URLs
   hosts: localhost
@@ -105,4 +105,4 @@
     - debug:
         msg: 
           - "Access Automation Controller: https://controller.{{ top_level_domain }}"
-          - "Access Private Automation Hub: https://hub.{{ top_level_domain }}"
+          # - "Access Private Automation Hub: https://hub.{{ top_level_domain }}"

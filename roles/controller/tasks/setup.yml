@@ -60,7 +60,7 @@
         dest: "~/aap_install/inventory"
 
     - name: run the Automation Controller installer
-      shell: "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0 -e create_preload_data=False"
+      shell: "ANSIBLE_HOST_KEY_CHECKING=False ANSIBLE_BECOME_METHOD='sudo' ANSIBLE_BECOME=True ./setup.sh -e gpgcheck=0"
       args:
         chdir: "~/aap_install"
       async: 2700
