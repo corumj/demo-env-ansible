@@ -45,17 +45,17 @@
         name: certificates
         tasks_from: validate-challenge.yml
 
-    - name: Setup Route 53 for hub domain name 
-      community.aws.route53:
-        profile: "{{ aws_profile }}"
-        state: present 
-        zone: "{{ top_level_domain }}"
-        record: "hub.{{ top_level_domain }}"
-        type: A
-        value: "{{ hostvars[groups['demo_hub'][0]]['public_ip_address'] }}"
-        ttl: 300
-        wait: yes
-        overwrite: yes
+    # - name: Setup Route 53 for hub domain name 
+    #   community.aws.route53:
+    #     profile: "{{ aws_profile }}"
+    #     state: present 
+    #     zone: "{{ top_level_domain }}"
+    #     record: "hub.{{ top_level_domain }}"
+    #     type: A
+    #     value: "{{ hostvars[groups['demo_hub'][0]]['public_ip_address'] }}"
+    #     ttl: 300
+    #     wait: yes
+    #     overwrite: yes
 
   # Copied this map extract business from here and adapted it: https://stackoverflow.com/a/39932728
     - name: Setup Route 53 for controller domain name 

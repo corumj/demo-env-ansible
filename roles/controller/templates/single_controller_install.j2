@@ -27,7 +27,6 @@ peers=execution_nodes
 [execution_nodes]
 
 [automationhub]
-#hub.{{ top_level_domain }} ansible_host={{ hostvars[groups['demo_hub'][0]]['private_ip_address'] }}
 
 [database]
 
@@ -82,7 +81,7 @@ automationhub_pg_sslmode='prefer'
 # clients will connect to (e.g. https://<load balancer host>).
 # If not specified, the first node in the [automationhub] group will be used.
 #
-automationhub_main_url = 'https://hub.{{ top_level_domain }}'
+# automationhub_main_url = 'https://hub.{{ top_level_domain }}'
 
 # By default if the automation hub package and its dependencies
 # are installed they won't get upgraded when running the installer
